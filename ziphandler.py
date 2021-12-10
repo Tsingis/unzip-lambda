@@ -6,6 +6,7 @@ from io import BytesIO
 from zipfile import ZipFile
 
 
+ARCHIVE_ENABLED = True
 ARCHIVE_LOCATION = "archive"
 
 s3 = boto3.client("s3")
@@ -26,7 +27,8 @@ def handler(event, context):
     if key.lower().endswith(".zip"):
         try:
             unzip_files(bucket, key)
-            archive_zip(bucket, key)
+            if ARCHIVE_ENABLED:
+                archive_zip(bucket, key)
         except Exception:
             logger.exception(f"Error handling zip {key}")
 
